@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lenz — Privacy policy</title>
+<link rel="icon" href="lenz.png">
+<style>
+  body { margin: 0; background: #0b0d14; color: #eef0f7; font: 16px/1.7 "Segoe UI Variable", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 24px 72px; }
+  a { color: #38c6ff; }
+  h1 { font-size: 34px; margin: 0 0 4px; }
+  h2 { font-size: 20px; margin: 34px 0 8px; }
+  p, li { color: #c3c8d9; }
+  .muted { color: #9aa1b8; font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 15px; }
+  th, td { text-align: left; border-bottom: 1px solid #232840; padding: 8px 6px; vertical-align: top; }
+  th { color: #eef0f7; }
+  td { color: #c3c8d9; }
+  .wide { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<main>
+  <p><a href="index.html">← Lenz</a></p>
+  <h1>Privacy policy</h1>
+  <p class="muted">Applies to the Lenz Android app and the Lenz Windows app. Last updated: 11 September 2026.</p>
+
+  <h2>The short version</h2>
+  <p>Lenz does not collect, store or sell any personal data. There are no accounts, no ads, no analytics and no Lenz
+  servers. Your video travels only between your own phone and your own PC, on your local network, encrypted.</p>
+
+  <h2>Camera video</h2>
+  <p>The phone app uses the camera only while a paired PC asks it to stream. The video is encrypted (AES-256-GCM) and
+  sent directly to that PC over your local network. It is not recorded, uploaded or sent to anyone else. On the PC,
+  the picture is shown in the preview and offered to the apps you choose through the Windows camera system; Windows
+  camera privacy settings apply to those apps.</p>
+
+  <h2>Data kept on your devices</h2>
+  <div class="wide"><table>
+    <tr><th>What</th><th>Where</th><th>Why</th></tr>
+    <tr><td>Pairing keys and device names (for example “Pixel 8”, the PC's computer name)</td><td>On the phone, and on the PC protected by Windows (DPAPI)</td><td>So paired devices recognise each other. Removed with <i>Forget</i> or by uninstalling.</td></tr>
+    <tr><td>Your settings (resolution, looks, overlays, hotkeys, images you chose)</td><td>PC: %AppData%\Lenz</td><td>To remember your choices.</td></tr>
+    <tr><td>A technical log (errors, versions, connection events)</td><td>PC: %AppData%\Lenz\app.log</td><td>For troubleshooting. It never leaves your PC unless you copy it yourself with <i>Copy diagnostics</i>.</td></tr>
+  </table></div>
+
+  <h2>Network connections</h2>
+  <ul>
+    <li><b>Local network only, for the camera.</b> The phone announces itself on your WiFi (a small broadcast with its name and a random device identifier) so the PC can find it. The camera connection itself stays on your local network.</li>
+    <li><b>Update check (PC, optional).</b> Once a day the PC app asks GitHub whether a newer version exists (<code>api.github.com</code>). The request contains only the Lenz version number. GitHub sees your IP address, as with any website visit; see <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>. You can turn this off in <i>About &amp; diagnostics</i>. Nothing is downloaded or installed automatically.</li>
+    <li>Nothing else. Lenz makes no other internet connections.</li>
+  </ul>
+
+  <h2>Android permissions</h2>
+  <ul>
+    <li><b>Camera</b> — to film, only while streaming to a paired PC.</li>
+    <li><b>Network / WiFi state</b> — to be found by the PC and to stream to it on your local network.</li>
+    <li><b>Notifications and foreground service</b> — so streaming continues with the screen off, and to ask you to allow a new PC.</li>
+    <li><b>Wake lock</b> — to keep streaming while the screen is off.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>Lenz collects no data from anyone, including children.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the new version will be published on this page with a new date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or requests: open an issue on <a href="https://github.com/btparov-eng/lenz/issues">GitHub</a>.</p>
+</main>
+</body>
+</html>

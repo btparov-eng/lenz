@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lenz — your phone as a wireless webcam for Windows 11</title>
+<meta name="description" content="Lenz turns your Android phone into a sharp, low-latency wireless webcam for Windows 11. Free. Made for Discord, OBS, Teams and games.">
+<meta property="og:title" content="Lenz — your phone is the best webcam you own">
+<meta property="og:description" content="Wireless, low latency, up to 4K, every lens. Background blur, looks, game mode and hotkeys. Free for Windows 11 + Android.">
+<link rel="icon" href="lenz.png">
+<style>
+  :root {
+    --bg: #0b0d14; --bg2: #11141f; --card: #151927; --line: #232840;
+    --text: #eef0f7; --muted: #9aa1b8; --accent: #7c6cff; --accent2: #38c6ff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 "Segoe UI Variable", "Segoe UI", system-ui, sans-serif; }
+  a { color: var(--accent2); }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  header.top { position: sticky; top: 0; z-index: 5; backdrop-filter: blur(12px); background: rgba(11,13,20,.75); border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; }
+  .brand img { width: 28px; height: 28px; }
+  nav a { color: var(--muted); text-decoration: none; margin-left: 22px; font-size: 14px; }
+  nav a:hover { color: var(--text); }
+
+  .hero { padding: 88px 0 64px; background: radial-gradient(900px 420px at 70% 0%, rgba(124,108,255,.22), transparent 70%), radial-gradient(700px 360px at 10% 30%, rgba(56,198,255,.12), transparent 70%); }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+  .pill { display: inline-block; font-size: 13px; color: var(--accent2); border: 1px solid rgba(56,198,255,.35); border-radius: 999px; padding: 3px 12px; margin-bottom: 18px; }
+  h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.08; margin: 0 0 18px; letter-spacing: -.02em; }
+  h1 span { background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 19px; max-width: 34em; margin: 0 0 28px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: transform .12s ease, filter .12s ease; }
+  .btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+  .btn.primary { background: linear-gradient(90deg, var(--accent), #5f7bff); color: #fff; box-shadow: 0 8px 28px rgba(124,108,255,.35); }
+  .btn.ghost { border: 1px solid var(--line); color: var(--text); background: var(--bg2); }
+  .small { color: var(--muted); font-size: 13px; margin-top: 14px; }
+
+  /* hero illustration: phone streaming to a PC window */
+  .scene { position: relative; height: 360px; }
+  .monitor { position: absolute; right: 0; top: 20px; width: 86%; aspect-ratio: 16/10; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.5); overflow: hidden; }
+  .monitor .bar { height: 30px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 6px; padding: 0 12px; }
+  .monitor .bar i { width: 9px; height: 9px; border-radius: 50%; background: #2c3150; }
+  .feed { position: absolute; inset: 42px 14px 14px 14px; border-radius: 10px; background: radial-gradient(circle at 50% 38%, #3b3f63 0 17%, transparent 17.5%), radial-gradient(ellipse at 50% 95%, #3b3f63 0 36%, transparent 36.5%), linear-gradient(135deg, #1b2140, #2a1f4a); filter: saturate(1.1); }
+  .feed::after { content: "ON AIR"; position: absolute; left: 10px; top: 10px; font-size: 11px; font-weight: 700; color: #ff8a8a; background: rgba(120,20,30,.55); padding: 2px 8px; border-radius: 6px; }
+  .tag { position: absolute; left: 12px; bottom: 12px; background: rgba(0,0,0,.45); border-left: 3px solid var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 13px; }
+  .phone { position: absolute; left: 0; bottom: 0; width: 120px; height: 236px; border-radius: 22px; background: #0e1020; border: 2px solid #2b3050; box-shadow: 0 20px 50px rgba(0,0,0,.6); padding: 10px; }
+  .phone .screen { width: 100%; height: 100%; border-radius: 14px; background: linear-gradient(160deg, #262b52, #151827); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 11px; color: var(--muted); }
+  .phone .dot { width: 34px; height: 34px; border-radius: 50%; background: radial-gradient(circle, var(--accent2) 0 30%, var(--accent) 31% 55%, transparent 56%); }
+  .waves { position: absolute; left: 118px; bottom: 120px; width: 90px; height: 40px; }
+  .waves span { position: absolute; left: 0; top: 50%; height: 2px; width: 100%; background: linear-gradient(90deg, var(--accent2), transparent); animation: flow 1.6s linear infinite; opacity: .8; }
+  .waves span:nth-child(2) { top: 30%; animation-delay: .5s; } .waves span:nth-child(3) { top: 70%; animation-delay: 1s; }
+  @keyframes flow { from { transform: scaleX(0); transform-origin: left; } 50% { transform: scaleX(1); transform-origin: left; } to { transform: scaleX(0); transform-origin: right; } }
+  @media (prefers-reduced-motion: reduce) { .waves span { animation: none; } }
+
+  section { padding: 72px 0; }
+  section.alt { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  h2 { font-size: clamp(26px, 3.4vw, 36px); margin: 0 0 12px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 36px; max-width: 42em; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .card .ic { font-size: 24px; margin-bottom: 8px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .steps .card::before { counter-increment: s; content: counter(s); display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(124,108,255,.18); color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .req { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .req ul { margin: 0; padding-left: 18px; color: var(--muted); }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  @media (max-width: 860px) {
+    .hero .wrap, .req { grid-template-columns: 1fr; }
+    .grid, .steps { grid-template-columns: 1fr 1fr; }
+    nav a:not(.keep) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .grid, .steps { grid-template-columns: 1fr; }
+    .scene { height: 290px; }
+    .monitor { width: 74%; top: 0; }
+    .phone { width: 96px; height: 188px; border-radius: 18px; }
+    .waves { left: 94px; bottom: 90px; width: 60px; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="lenz.png" alt="">Lenz</a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+      <a class="keep" href="https://github.com/btparov-eng/lenz/releases/latest">Download</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <div class="pill">Free beta · Windows 11 + Android</div>
+      <h1>Your phone is the <span>best webcam</span> you own.</h1>
+      <p class="lead">Lenz turns your Android phone into a sharp, low-latency wireless webcam. It shows up as <b>Lenz Camera</b> in Discord, OBS, Teams, Zoom and your browser. No cable, no account, no watermark.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/btparov-eng/lenz/releases/latest">⬇ Download for Windows</a>
+        <a class="btn ghost" href="https://github.com/btparov-eng/lenz/releases/latest">📱 Get the Android app</a>
+      </div>
+      <p class="small">Both downloads are on the GitHub release page: <i>Lenz-Setup.exe</i> for the PC, <i>Lenz-phone.apk</i> for the phone.</p>
+    </div>
+    <div class="scene" aria-hidden="true">
+      <div class="monitor"><div class="bar"><i></i><i></i><i></i></div><div class="feed"><div class="tag">Alex · live</div></div></div>
+      <div class="waves"><span></span><span></span><span></span></div>
+      <div class="phone"><div class="screen"><div class="dot"></div>Streaming<br>1080p · 60 fps</div></div>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2>Everything a webcam should have been</h2>
+    <p class="sub">The phone's camera and hardware encoder do the heavy lifting. Your PC gets a clean picture for almost no CPU, even in the middle of a game.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">📶</div><h3>Wireless, low latency</h3><p>Over your home WiFi. Hardware H.264 on the phone, GPU decoding on the PC. Find the phone automatically, reconnect by itself.</p></div>
+      <div class="card"><div class="ic">🔭</div><h3>Every lens, up to 4K</h3><p>Main, ultra-wide, telephoto and selfie cameras. Zoom, tap to focus, exposure, torch, manual ISO and shutter on supported phones.</p></div>
+      <div class="card"><div class="ic">🎮</div><h3>Made for gamers</h3><p>Game mode drops to near-zero CPU when a game is full-screen. Global hotkeys work inside games.</p></div>
+      <div class="card"><div class="ic">🙈</div><h3>Privacy &amp; BRB cards</h3><p>One key swaps your camera for an image, a GIF, a frozen frame or black. Auto-BRB when you leave your seat.</p></div>
+      <div class="card"><div class="ic">🎨</div><h3>Looks</h3><p>Presets like Clean for Discord, Cinematic or Night. Brightness, warmth, sharpening, denoise, skin smoothing and your own .cube LUTs.</p></div>
+      <div class="card"><div class="ic">🌫️</div><h3>Background blur</h3><p>Blur, a colour or an image behind you. The person cut-out runs on your graphics card.</p></div>
+      <div class="card"><div class="ic">🎯</div><h3>Follow me</h3><p>The phone's face detection keeps you centred with a smooth digital pan and zoom.</p></div>
+      <div class="card"><div class="ic">🏷️</div><h3>Overlays</h3><p>Name tag, stickers and a glowing frame that can pulse when you talk.</p></div>
+      <div class="card"><div class="ic">🔒</div><h3>Paired &amp; encrypted</h3><p>A phone streams only to PCs you paired with a 6-digit code, and the video is encrypted. Nothing goes through the internet.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="alt">
+  <div class="wrap">
+    <h2>Set up in two minutes</h2>
+    <p class="sub">Both devices on the same WiFi network, that's the only requirement.</p>
+    <div class="steps">
+      <div class="card"><h3>Install both apps</h3><p>Run the Windows installer, then install the APK on your phone (allow installs from this source when Android asks).</p></div>
+      <div class="card"><h3>Pair once</h3><p>Open Lenz on both. Your phone appears on the PC: press Connect, check the same code shows on both screens, and accept.</p></div>
+      <div class="card"><h3>Pick “Lenz Camera”</h3><p>In Discord, OBS, Teams, Zoom or your browser, choose Lenz Camera. Next time it connects by itself.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap req">
+    <div class="card"><h3>PC</h3><ul><li>Windows 11 (22H2 or newer), 64-bit</li><li>Any DirectX 11 graphics card (integrated is fine)</li><li>The installer adds the .NET 8 runtime if needed</li></ul></div>
+    <div class="card"><h3>Phone</h3><ul><li>Android 9 or newer</li><li>5 GHz WiFi recommended above 1080p</li><li>Keep it charging for long sessions: Lenz watches battery and temperature</li></ul></div>
+  </div>
+</section>
+
+<section id="faq" class="alt">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <details><summary>Is it really free?</summary><p>Yes. Lenz is free during the beta, with no watermark and no resolution limit. If a paid version ever comes, it will add new features; what you have now stays free.</p></details>
+    <details><summary>Windows says “Windows protected your PC” / unknown publisher</summary><p>The installer is not code-signed yet, so SmartScreen does not know it. Click <i>More info → Run anyway</i>. You can check the file's SHA-256 against the one on the release page.</p></details>
+    <details><summary>Android warns about installing an unknown app</summary><p>The app is not on the Play Store yet. Allow your browser or file manager to install it once. A Play Store version is on the way.</p></details>
+    <details><summary>Is my video sent anywhere?</summary><p>No. The video goes straight from your phone to your PC over your local network, encrypted. There are no accounts, no servers and no analytics. See the <a href="privacy.html">privacy policy</a>.</p></details>
+    <details><summary>The phone does not show up on the PC</summary><p>Check both are on the same WiFi, and that the network is set to <i>Private</i> in Windows. You can also type the address the phone shows. Guest networks often block devices from seeing each other.</p></details>
+    <details><summary>Does it do audio?</summary><p>Not yet. Lenz is video only; keep using your headset or PC microphone.</p></details>
+    <details><summary>Something broke. How do I report it?</summary><p>In the PC app open <i>About &amp; diagnostics → Copy diagnostics</i> and paste the result into a <a href="https://github.com/btparov-eng/lenz/issues">GitHub issue</a>.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Lenz · free beta</span>
+    <span><a href="privacy.html">Privacy</a> · <a href="https://github.com/btparov-eng/lenz/releases">Releases</a> · <a href="https://github.com/btparov-eng/lenz/issues">Report a problem</a></span>
+  </div>
+</footer>
+</body>
+</html>
